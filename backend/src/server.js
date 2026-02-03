@@ -17,7 +17,7 @@ if (ENV.NODE_ENV === "production") {
   });
 }
 
-const startSever = async () => {
+const startServer = async () => {
   try {
     await connectDB();
     app.listen(ENV.PORT, () => {
