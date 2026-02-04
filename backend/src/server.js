@@ -26,7 +26,7 @@ if (ENV.NODE_ENV === "production") {
 
   app.use(express.static(frontendDist));
 
-  app.get("/*", (req, res) => {
+  app.get("/{*any}", (req, res) => {
     res.sendFile(path.join(frontendDist, "index.html"));
   });
 }
