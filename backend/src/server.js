@@ -17,9 +17,9 @@ app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 
-app.get("/", (req, res) => {
-  res.status(200).json({ msg: "Yes" });
-});
+// app.get("/", (req, res) => {
+//   res.status(200).json({ msg: "Yes" });
+// });
 
 if (ENV.NODE_ENV === "production") {
   const frontendDist = path.resolve(__dirname, "../../frontend/dist");
