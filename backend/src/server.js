@@ -13,33 +13,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 //middleware
-app.use("/api/inngest", serve({ client: inngest, functions }));
-app.use(express.json());
-app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(cors());
 
-// app.get("/", (req, res) => {
-//   res.status(200).json({ msg: "Yes" });
-// });
+app.use("/api/inngest", serve({ client: inngest, functions }));
 
 if (ENV.NODE_ENV === "production") {
   const frontendDist = path.resolve(__dirname, "../../frontend/dist");
-
   app.use(express.static(frontendDist));
-
-  app.get("/{*any}", (req, res) => {
-    res.sendFile(path.join(frontendDist, "index.html"));
-  });
-}
-
-if (ENV.NODE_ENV === "production") {
-  const frontendDist = path.resolve(
-    __dirname,
-    "../../frontend/dist"
-  );
-
   console.log("Serving frontend from:", frontendDist);
-
-  app.use(express.static(frontendDist));
 
   app.use((req, res) => {
     res.sendFile(path.join(frontendDist, "index.html"));
