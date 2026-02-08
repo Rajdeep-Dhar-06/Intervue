@@ -9,6 +9,7 @@ import { functions } from "./lib/inngest.js";
 import { serve } from "inngest/express";
 import { clerkMiddleware } from "@clerk/express";
 import chatRoutes from "./routes/chatRoutes.js";
+import sessionRoutes from "./routes/sessionRoutes.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -16,12 +17,17 @@ const __dirname = path.dirname(__filename);
 
 //middleware
 app.use(express.json({ limit: "10mb" }));
-app.use(cors());
+if (!ENV.CLIENT_URL) {
+  console.warn("CLIENT_URL not set; CORS may block requests");
+}
+
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
 app.use(clerkMiddleware()); //req.auth()
 
 app.use("/api/chat", chatRoutes);
+app.use("/api/session", sessionRoutes);
 
 if (ENV.NODE_ENV === "production") {
   const frontendDist = path.resolve(__dirname, "../../frontend/dist");
