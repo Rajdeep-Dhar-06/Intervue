@@ -17,6 +17,10 @@ const __dirname = path.dirname(__filename);
 
 //middleware
 app.use(express.json({ limit: "10mb" }));
+if (!ENV.CLIENT_URL) {
+  console.warn("CLIENT_URL not set; CORS may block requests");
+}
+
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
