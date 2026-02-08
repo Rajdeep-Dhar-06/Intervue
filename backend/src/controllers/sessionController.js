@@ -97,6 +97,10 @@ export async function joinSession(req, res) {
     const session = await Session.findById(id);
     if (!session) return res.status(404).json({ message: "Session not found" });
 
+    if (session.status === "completed") {
+      return res.status(400).json({ message: "Session is already completed" });
+    }
+
     // Prevent host from joining their own session as participant
     if (session.host.toString() === userId.toString()) {
       return res
